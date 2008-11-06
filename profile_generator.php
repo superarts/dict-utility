@@ -1,9 +1,12 @@
 <?php
 
+$quick_series = true;
+$quick_deluxe = true;
+
+require("sd_path.php");
+
 $sd_name_prefix = "iDict";
 $sd_name_postfix = "Quick";
-$sd_db_path = "./data/db";
-$sd_profile_path = "./data/profile";
 $sd_term = array(
 	'afr',
 	'bul',
@@ -130,35 +133,56 @@ function sd_get_db($term, $path)
 	return $ret;
 }
 
-//	foreach ($sd_term as $term)
-for ($i = 0; $i < count($sd_term); $i++)
+function fwrite_dbname($fp, $r)
 {
-	$term1 = $sd_term[$i];
-	$term2 = $sd_term_alt[$i];
-	echo "$i:\tProcessing $term1 ($term2):\n";
-	$r1 = sd_get_db($term1, $sd_db_path);
-	$r2 = sd_get_db($term2, $sd_db_path);
-	$intersect = array_intersect($r1, $r2);
-	$diff1 = array_diff($r1, $r2);
-	$diff2 = array_diff($r2, $r1);
-	//	$r = $intersect + $diff;
-	$r = array_merge($intersect, $diff1, $diff2);
-	$count = count($r);
-	$name = $sd_language[$i];
-	//	print_r($r);
-	//	echo "Name: $name\nCount: $count\n\n";
-	if ($count > 1)
+	foreach ($r as $db_name)
 	{
-		$fp = fopen("$sd_profile_path/$term1-$term2.profile", 'wb');
-		$s = "$sd_name_prefix - $name $sd_name_postfix (From/To $count Languages/Dictionaries)\n";
+		$s = "$db_name\n";
 		fwrite($fp, $s);
-		foreach ($r as $db_name)
-		{
-			$s = "$db_name\n";
-			fwrite($fp, $s);
-		}
-		fclose($fp);
 	}
+}
+
+//	bundles
+if ($quick_series)
+{
+	//	foreach ($sd_term as $term)
+	for ($i = 0; $i < count($sd_term); $i++)
+	{
+		$term1 = $sd_term[$i];
+		$term2 = $sd_term_alt[$i];
+		echo "$i:\tProcessing $term1 ($term2)\n";
+		$r1 = sd_get_db($term1, $sd_db_path);
+		$r2 = sd_get_db($term2, $sd_db_path);
+		$intersect = array_intersect($r1, $r2);
+		$diff1 = array_diff($r1, $r2);
+		$diff2 = array_diff($r2, $r1);
+		//	$r = $intersect + $diff;
+		$r = array_merge($intersect, $diff1, $diff2);
+		$count = count($r);
+		$name = $sd_language[$i];
+		//	print_r($r);
+		//	echo "Name: $name\nCount: $count\n\n";
+		if ($count > 1)
+		{
+			$fp = fopen("$sd_profile_path/quick-$term1-$term2.profile", 'wb');
+			$s = "$sd_name_prefix - $name $sd_name_postfix\\n(From/To $count Languages/Dictionaries)\n";
+			fwrite($fp, $s);
+			fwrite_dbname($fp, $r);
+			fclose($fp);
+		}
+	}
+}
+
+if ($quick_deluxe)
+{
+	exec("ls $sd_db_path/*.db", $r);
+	$count = count($r);
+	$name = "Deluxe";
+	$fp = fopen("$sd_profile_path/quick-deluxe.profile", 'wb');
+	$s = "$sd_name_prefix - $sd_name_postfix $name\\n(From/To $count Languages/Dictionaries)\n";
+	fwrite($fp, $s);
+	fwrite_dbname($fp, $r);
+	fclose($fp);
 }
 
 ?>

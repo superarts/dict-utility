@@ -1,0 +1,12 @@
+word_extractor.php			*.sql; idict_import.sql; idict_info.db
+	dic_extractor.php
+	index_extractor.php
+db_generator.php			*.db:				from *.sql
+profile_generator.php		*.profile:			based on *.db
+header_generator.php		*.sh, dictdata.h:	from *.profile
+index_generator.php			*.db:				appending word_index
+
+*.db:		sqlite3 database file
+*.sql:		text file, sqlite3 statements
+*.profile:	text file, bundle (name and *.db)
+*.sh:		shell script, copy *.db into superdic project directory
