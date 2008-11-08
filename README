@@ -1,4 +1,4 @@
-word_extractor.php			*.sql; idict_import.sql; idict_info.db
+word_extractor.php			*.sql; idict_import.sh; idict_info.db
 	dic_extractor.php
 	index_extractor.php
 db_generator.php			*.db:							from *.sql

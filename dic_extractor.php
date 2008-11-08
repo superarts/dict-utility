@@ -45,6 +45,7 @@ function sd_get_info($filename, $key)
 	//	echo "get info: 'cat $filename | grep $key'\n";
 	return substr($s, strlen($key) + 1);
 }
+
 function sd_get_dictionary()
 {
 	$ret = array();

@@ -1,6 +1,7 @@
 <?php
 
-$filename = "/home/leo/doc/dictionary/quick/stardict-quick_wel-swe-2.4.2/quick_walesiska-svenska.idx";
+//	$filename = "/home/leo/doc/dictionary/quick/stardict-quick_wel-swe-2.4.2/quick_walesiska-svenska.idx";
+$filename = "/home/leo/doc/dictionary/dictd/stardict-dictd_www.dict.org_gcide-2.4.2/dictd_www.dict.org_gcide.idx";
 //	$filename = "/usr/share/stardict/dic/stardict-langdao-ec-gb-2.4.2/langdao-ec-gb.idx";
 
 function sd_read_string($fp)
@@ -38,9 +39,10 @@ function sd_get_index($filename)
 	return $ret;
 }
 
-/*
-$r = sd_get_index($filename);
-print_r($r);
- */
+if (false)
+{
+	$r = sd_get_index($filename);
+	print_r($r);
+}
 
 ?>

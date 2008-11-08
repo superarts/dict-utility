@@ -49,7 +49,7 @@ function sd_get_meaning($word, $dict)
 
 function sd_should_insert($bookname)
 {
-	$s = "sqlite3 idict_info.db 'select * from info where bookname=\"$bookname\"'";
+	$s = "sqlite3 data/idict_info.db 'select * from info where bookname=\"$bookname\"'";
 	$s = exec($s);
 	if ($s == '')
 		return true;
@@ -59,7 +59,7 @@ function sd_should_insert($bookname)
 
 //	echo sd_make_string("one's will");
 
-$fp_sql = fopen("output/idict_import.sql", "wb");
+$fp_sql = fopen("output/idict_import.sh", "wb");
 
 $dic_list = sd_get_filelist($sd_path);
 //	print_r($dic_list);
@@ -91,6 +91,8 @@ for ($i = 0; $i < count($dic_list); $i++)
 			$fp_txt = fopen("output/$dictname-$bookname.sql", "wb");
 			//	$sql = "sqlite3 $dictname-$bookname.db 'create table dict(word text, meaning text);'\n";
 			$sql = "create table dict(word text, meaning text);\n";
+			fwrite($fp_txt, $sql);
+			$sql = "begin transaction;\n";
 			fwrite($fp_txt, $sql);
 			//	echo "$sql\n";
 
@@ -124,14 +126,16 @@ for ($i = 0; $i < count($dic_list); $i++)
 			}
 			//	$sql = "sqlite3 $dictname-$bookname.db .exit\n";
 			//	fwrite($fp_txt, $sql);
+			$sql = "commit;\n";
+			fwrite($fp_txt, $sql);
 
-			$sql = "sqlite3 -init $dictname-$bookname.sql $dictname-$bookname.db .exit\n";
+			$sql = "sqlite3 -init '$dictname-$bookname.sql' '$dictname-$bookname.db' .exit\n";
 			fwrite($fp_sql, $sql);
 			//	echo "$sql\n";
 			//	exec($sql);
 			fclose($fp_txt);
 
-			$sql = "sqlite3 idict_info.db 'insert into info values(\"$dictname\", \"$bookname\", \"$wordcount\", \"$author\", \"$bookname\")'";
+			$sql = "sqlite3 data/idict_info.db 'insert into info values(\"$dictname\", \"$bookname\", \"$wordcount\", \"$author\", \"iDict - $bookname (Dictd)\")'";
 			//	echo "$sql\n";
 			exec($sql);
 		}
