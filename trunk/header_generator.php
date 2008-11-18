@@ -47,7 +47,7 @@ function sd_get_dict_macro($dictname)
 //	generate header
 if (true)
 {
-	$fp_readme = fopen('readme.txt', 'wb');
+	$fp_readme = fopen($sd_filename_readme, 'wb');
 	exec("ls $sd_profile_path/*.profile", $array_profile);
 	/*
 	exec("ls $sd_profile_path/", $array_profile);
@@ -64,6 +64,7 @@ if (true)
 	echo "#define __DICTDATA_H\n";
 	echo "\n";
 
+	$dict_array = array();
 	foreach ($array_profile as $profilename)
 	{
 		$array_profile = file($profilename);
@@ -71,6 +72,7 @@ if (true)
 		//	echo "xxxx $dictname\n"; exit(0);
 		$dictname = substr($dictname, 0, -1);
 		$dictmacro = sd_get_dict_macro($dictname);
+		$dict_array[] = $dictmacro;
 
 		$script_name = strtolower($dictmacro) . ".sh";
 		$fp = fopen("$sd_script_path/$script_name", "wb");
@@ -131,11 +133,11 @@ if (true)
 			$dbname = $array_profile[$index_profile];
 			$dbname = substr($dbname, 0, -1);
 			$description = sd_get_db_info($dbname, 'description');
-			//	$count = sd_get_db_info($dbname, 'count');
+			$count = sd_get_db_info($dbname, 'count');
 			//	$author = sd_get_db_info($dbname, 'author');
 
 			echo "		@\"$description\",\n";
-			$s = " * $description\n";
+			$s = " * $description [$count Entries]\n";
 			fwrite($fp_readme, $s);
 
 			$readme_filesize += filesize($dbname);
@@ -219,6 +221,12 @@ if (true)
 		}
 		*/
 	}
+
+	foreach ($dict_array as $s)
+	{
+		echo "//	#define $s\n";
+	}
+	echo "\n";
 
 	echo "#endif // __DICTDATA_H";
 	fclose($fp_readme);
