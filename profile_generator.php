@@ -366,15 +366,16 @@ $data_dictd = array(
 		),
 	);
 
-if ($freedict_deluxe)
+if ($dictd_series)
 {
-	foreach ($dictd_data as $r)
+	foreach ($data_dictd as $r)
 	{
 		$name = $r[0];
 		$count = count($r);
 
 		$filename = str_replace(' & ', '_', $name);
 		$filename = str_replace(' ', '_', $filename);
+		echo "processing $name\n";
 		$fp = fopen("$sd_profile_path/$filename.profile", 'wb');
 
 		$s = "$name\\n($count Databases)\n";
@@ -383,9 +384,15 @@ if ($freedict_deluxe)
 		for ($i = 1; $i < count($r); $i++)
 		{
 			$s = "_" . $r[$i] . "_";
-			exec("ls $sd_db_path/*.db | grep $s", $r);
-			
-			fwrite($fp, $s);
+			$s = "ls $sd_db_path/*$s*.db";
+			echo "\tlisting $s\n";
+
+			$result = array();
+			exec("$s", $result);
+
+			//	print_r($result);
+			fwrite_dbname($fp, $result);
+			//fwrite($fp, $s);
 		}
 		fclose($fp);
 	}
