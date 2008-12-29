@@ -2,8 +2,9 @@
 
 $quick_series = false;
 $quick_deluxe = false;
-$freedict_series = true;
-$freedict_deluxe = true;
+$freedict_series = false;
+$freedict_deluxe = false;
+$dictd_series = true;
 
 require("sd_path.php");
 
@@ -254,6 +255,140 @@ if ($freedict_deluxe)
 	fwrite($fp, $s);
 	fwrite_dbname($fp, $r);
 	fclose($fp);
+}
+
+$data_dictd = array(
+		array(
+			'Vietnamese Dictd',
+			'viet',
+		),
+		array(
+			'Thesaurus',
+			'thesaurus',
+			'jargon',
+			'vera',
+			'elements',
+			'foldoc',
+			'smiley',
+		),
+		array(
+			'Gazetteer',
+			'gazetteer',
+			'world02',
+			'smiley',
+		),
+		array(
+			'Bible & Devils',
+			'devils',
+			'hitchcock',
+			'smiley',
+		),
+		array(
+			'GNU Collaborative International Dictionary of English',
+			'gcide',
+			'smiley',
+		),
+		array(
+			'WordNet',
+			'wn',
+			'smiley',
+		),
+		array(
+			'Большой словарь',
+			'1000pbio',
+			'aviation',
+			'beslov',
+			'biology',
+			'brok_and_efr',
+			'ethnographic',
+			'findict',
+			'idioms',
+			'mech',
+			'ozhegov',
+			'religion',
+			'sc_abbr',
+			'teo',
+			'ushakov',
+			'zhelezyaki',
+		),
+		array(
+			'Russian Mova',
+			'deutsch',
+			'swedish',
+			'engcom',
+			'geology',
+			'sc_abbr',
+		),
+		array(
+			'English & Russian Sinyagin',
+			'sinyagin_abbrev',
+			'sinyagin_alexeymavrin',
+			'sinyagin_business',
+			'sinyagin_computer',
+			'sinyagin_general',
+			'smiley',
+		),
+		array(
+			'English & Russian Sokrat',
+			'sokrat',
+			'smiley',
+		),
+		array(
+			'English & Russian Korolew',
+			'korolew',
+			'smiley',
+		),
+		array(
+			'English & Russian Dictd',
+			'sokrat',
+			'korolew',
+		),
+		array(
+			'Belarusian Dictd',
+			'compbe',
+			'be',
+		),
+		array(
+			'English Slovnyk',
+			'en',
+		),
+		array(
+			'Polish Slovnyk',
+			'pl',
+		),
+		array(
+			'Russian Slovnyk',
+			'ru',
+		),
+		array(
+			'Ukrainian Slovnyk',
+			'uk',
+		),
+	);
+
+if ($freedict_deluxe)
+{
+	foreach ($dictd_data as $r)
+	{
+		$name = $r[0];
+		$count = count($r);
+
+		$filename = str_replace(' & ', '_', $name);
+		$filename = str_replace(' ', '_', $filename);
+		$fp = fopen("$sd_profile_path/$filename.profile", 'wb');
+
+		$s = "$name\\n($count Databases)\n";
+		fwrite($fp, $s);
+
+		for ($i = 1; $i < count($r); $i++)
+		{
+			$s = "_" . $r[$i] . "_";
+			exec("ls $sd_db_path/*.db | grep $s", $r);
+			
+			fwrite($fp, $s);
+		}
+		fclose($fp);
+	}
 }
 
 ?>
