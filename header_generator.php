@@ -79,7 +79,7 @@ if (true)
 		$s = "#!/bin/bash\n";
 		fwrite($fp, $s);
 		//$s = "rm $sd_superdic_path/*\n";
-		$s = "mv $sd_superdic_path/* $sd_db_path/\n";
+		$s = "mv $sd_superdic_path/* '$sd_db_path/'\n";
 		fwrite($fp, $s);
 		$s = "du -h $sd_db_path/\n";
 		fwrite($fp, $s);
@@ -112,7 +112,7 @@ if (true)
 
 			echo "		@\"$dbname\",\n";
 
-			$s = "mv $sd_db_path/$dbname $sd_superdic_path/\n";
+			$s = "mv '$sd_db_path/$dbname' '$sd_superdic_path/'\n";
 			fwrite($fp, $s);
 		}
 		echo "		nil];\n";
