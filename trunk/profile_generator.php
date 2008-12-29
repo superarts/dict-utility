@@ -134,6 +134,7 @@ if ($freedict_series)
 		'Czech',
 		'Danish',
 		'German',
+		'English',
 		'French',
 		'Hungarian',
 		'Irish',
